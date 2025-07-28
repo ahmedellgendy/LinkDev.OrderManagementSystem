@@ -66,5 +66,17 @@ namespace LinkDev.OrderManagementSystem.Application.Services
             repo.Update(order);
             await _unitOfWork.CompleteAsync();
         }
+
+        public async Task DeleteOrderAsync(int orderId)
+        {
+            var repo = _unitOfWork.GetRepository<Order, int>();
+            var order = await repo.GetAsync(orderId);
+
+            if (order is null)
+                throw new Exception("Order not found");
+
+            repo.Delete(order);
+            await _unitOfWork.CompleteAsync();
+        }
     }
 }

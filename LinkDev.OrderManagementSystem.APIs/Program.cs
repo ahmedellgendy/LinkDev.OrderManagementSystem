@@ -1,5 +1,7 @@
 using LinkDev.OrderManagementSystem.Application;
+using LinkDev.OrderManagementSystem.Application.Abstraction;
 using LinkDev.OrderManagementSystem.Infrastructure.Persistence;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -30,6 +32,30 @@ namespace LinkDev.OrderManagementSystem.APIs
 
             builder.Services.AddPresistenceServices(builder.Configuration);
             builder.Services.AddApplicationServices();
+
+            builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
+
+            var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>();
+            var key = Encoding.UTF8.GetBytes(jwtSettings.Key);
+
+            builder.Services.AddAuthentication(opt =>
+            {
+                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                            .AddJwtBearer(opt =>
+                            {
+                                opt.TokenValidationParameters = new TokenValidationParameters
+                                {
+                                    ValidateIssuer = true,
+                                    ValidateAudience = true,
+                                    ValidateLifetime = true,
+                                    ValidateIssuerSigningKey = true,
+                                    ValidIssuer = jwtSettings.Issuer,
+                                    ValidAudience = jwtSettings.Audience,
+                                    IssuerSigningKey = new SymmetricSecurityKey(key)
+                                };
+                            });
 
 
             #endregion

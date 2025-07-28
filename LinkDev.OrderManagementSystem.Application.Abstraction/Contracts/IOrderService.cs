@@ -11,5 +11,6 @@ namespace LinkDev.OrderManagementSystem.Application.Abstraction.Contracts
         Task<IEnumerable<OrderListDto>> GetAllOrdersAsync();
         Task<IEnumerable<OrderListDto>> GetCustomerOrdersAsync(int customerId);
         Task UpdateOrderStatusAsync(int orderId, string newStatus);
+        Task DeleteOrderAsync(int orderId);
     }
 }
