@@ -23,6 +23,8 @@ namespace LinkDev.OrderManagementSystem.Application
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IAuthService, AuthService>();
+
 
             return services;
         }

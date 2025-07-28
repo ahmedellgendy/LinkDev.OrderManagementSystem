@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -41,6 +42,12 @@ namespace LinkDev.OrderManagementSystem.Infrastructure.Repositories
 
         public void Update(TEntity entity) => _dbContext.Set<TEntity>().Update(entity);
 
-        public Task<int> CompleteAsync()=> _dbContext.SaveChangesAsync();
+        public Task<int> CompleteAsync() => _dbContext.SaveChangesAsync();
+
+        public async Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            return await _dbContext.Set<TEntity>().Where(predicate).ToListAsync();
+        }
     }
+
 }
